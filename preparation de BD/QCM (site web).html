@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCM - Bases de données et MERISE</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .question {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        button {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QCM - Bases de données et MERISE</h1>
+        <form id="quiz-form">
+            <!-- Les questions seront insérées ici par JavaScript -->
+        </form>
+        <button onclick="checkAnswers()">Vérifier les réponses</button>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Que signifie MERISE ?",
+                options: [
+                    "Méthode d'Etude et de Réalisation Informatique pour les Systèmes d'Entreprise",
+                    "Modèle d'Etude et de Représentation des Informations Systémiques d'Entreprise",
+                    "Méthode d'Evaluation et de Restructuration Informatique des Systèmes Existants"
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Combien de cycles principaux comporte la méthode MERISE ?",
+                options: ["2", "3", "4", "5"],
+                correctAnswer: 1
+            },
+            {
+                question: "Quel est le premier niveau d'abstraction dans MERISE ?",
+                options: ["Niveau conceptuel", "Niveau logique", "Niveau physique", "Niveau organisationnel"],
+                correctAnswer: 0
+            },
+            {
+                question: "Que représente le MCD dans MERISE ?",
+                options: [
+                    "Modèle Conceptuel de Données",
+                    "Modèle de Conception des Données",
+                    "Méthode de Création de Données",
+                    "Modèle Complet de Données"
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Qu'est-ce qu'une entité dans le modèle conceptuel de données ?",
+                options: [
+                    "Un objet du monde réel",
+                    "Une table dans la base de données",
+                    "Une relation entre deux objets",
+                    "Un attribut d'un objet"
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Que représente une association dans le MCD ?",
+                options: [
+                    "Un lien entre deux entités",
+                    "Un attribut d'une entité",
+                    "Une contrainte sur une entité",
+                    "Une clé primaire"
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Qu'est-ce qu'une cardinalité dans le MCD ?",
+                options: [
+                    "Le nombre d'attributs d'une entité",
+                    "Le nombre de relations dans le modèle",
+                    "Le nombre minimum et maximum d'occurrences d'une entité dans une association",
+                    "Le nombre total d'entités dans le modèle"
+                ],
+                correctAnswer: 2
+            },
+            {
+                question: "Que signifie MCT dans MERISE ?",
+                options: [
+                    "Modèle Conceptuel de Traitement",
+                    "Méthode de Conception Technique",
+                    "Modèle de Contrôle des Traitements",
+                    "Mécanisme de Création des Tables"
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Quel est le but principal du Modèle Logique de Données (MLD) ?",
+                options: [
+                    "Représenter les données de manière indépendante du SGBD",
+                    "Définir les traitements sur les données",
+                    "Représenter les données de manière spécifique à un SGBD",
+                    "Modéliser les processus métier"
+                ],
+                correctAnswer: 2
+            },
+            {
+                question: "Qu'est-ce que le MPD dans MERISE ?",
+                options: [
+                    "Modèle Physique de Données",
+                    "Méthode de Programmation des Données",
+                    "Modèle de Planification des Données",
+                    "Mécanisme de Protection des Données"
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Quelle est la principale différence entre le MCD et le MLD ?",
+                options: [
+                    "Le MCD est plus détaillé que le MLD",
+                    "Le MLD est spécifique à un SGBD, le MCD est indépendant",
+                    "Le MCD concerne les traitements, le MLD les données",
+                    "Il n'y a pas de différence significative"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Qu'est-ce qu'une clé primaire dans une base de données ?",
+                options: [
+                    "Un attribut qui identifie de manière unique chaque enregistrement",
+                    "Le premier attribut de chaque table",
+                    "Un attribut qui relie deux tables",
+                    "Le nom de la table principale"
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Que représente une clé étrangère dans une base de données ?",
+                options: [
+                    "La clé primaire d'une table étrangère",
+                    "Un attribut qui fait référence à la clé primaire d'une autre table",
+                    "Une clé utilisée pour le chiffrement des données",
+                    "La première colonne d'une table"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Qu'est-ce qu'une contrainte d'intégrité référentielle ?",
+                options: [
+                    "Une règle qui assure que les données sont correctement formatées",
+                    "Une règle qui empêche la suppression de données utilisées dans d'autres tables",
+                    "Une règle qui limite le nombre d'enregistrements dans une table",
+                    "Une règle qui définit l'ordre des colonnes dans une table"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Quel est le but principal de la normalisation des bases de données ?",
+                options: [
+                    "Augmenter la vitesse des requêtes",
+                    "Réduire la redondance des données et améliorer l'intégrité",
+                    "Simplifier la structure de la base de données",
+                    "Augmenter le nombre de tables dans la base de données"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Qu'est-ce qu'une relation many-to-many (plusieurs à plusieurs) ?",
+                options: [
+                    "Une relation où chaque enregistrement d'une table est lié à plusieurs enregistrements d'une autre table, et vice versa",
+                    "Une relation où chaque enregistrement d'une table est lié à un seul enregistrement d'une autre table",
+                    "Une relation où il n'y a aucun lien entre les tables",
+                    "Une relation où tous les enregistrements sont liés entre eux"
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Quel est le rôle du Modèle Conceptuel de Communication (MCC) dans MERISE ?",
+                options: [
+                    "Représenter les flux d'informations entre les acteurs du système",
+                    "Définir la structure physique de la base de données",
+                    "Modéliser les traitements effectués sur les données",
+                    "Décrire l'architecture matérielle du système d'information"
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Qu'est-ce qu'un dictionnaire de données dans le contexte de MERISE ?",
+                options: [
+                    "Un livre contenant des définitions de termes informatiques",
+                    "Une liste exhaustive des données manipulées par le système d'information",
+                    "Un outil pour traduire les termes techniques en langage courant",
+                    "Une base de données contenant uniquement des mots-clés"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Quel est le principal avantage de séparer le MCD du MLD ?",
+                options: [
+                    "Cela permet de changer de SGBD sans modifier la conception",
+                    "Cela rend le modèle plus complexe et donc plus sécurisé",
+                    "Cela augmente la vitesse de traitement des données",
+                    "Cela réduit le nombre de tables nécessaires"
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Dans le MCD, que représente une cardinalité de type (0,n) ?",
+                options: [
+                    "Une relation obligatoire et multiple",
+                    "Une relation facultative et unique",
+                    "Une relation facultative et multiple",
+                    "Une relation obligatoire et unique"
+                ],
+                correctAnswer: 2
+            },
+            {
+                question: "Qu'est-ce qu'une entité faible dans le modèle entité-association ?",
+                options: [
+                    "Une entité qui a peu d'attributs",
+                    "Une entité dont l'existence dépend d'une autre entité",
+                    "Une entité qui n'a pas de clé primaire",
+                    "Une entité qui n'est pas utilisée fréquemment"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Quel est le rôle du Modèle Organisationnel des Traitements (MOT) dans MERISE ?",
+                options: [
+                    "Décrire la structure physique de la base de données",
+                    "Représenter les flux de données entre les tables",
+                    "Modéliser l'organisation des traitements en termes de ressources et de temps",
+                    "Définir les règles de gestion des données"
+                ],
+                correctAnswer: 2
+            },
+            {
+                question: "Qu'est-ce qu'une dépendance fonctionnelle dans le contexte des bases de données ?",
+                options: [
+                    "Une relation entre deux tables",
+                    "Une contrainte qui lie la valeur d'un attribut à celle d'un autre attribut",
+                    "Un type de requête SQL",
+                    "Une méthode de programmation des bases de données"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Quel est le but principal de la première forme normale (1NF) dans la normalisation ?",
+                options: [
+                    "Éliminer les groupes répétitifs",
+                    "Supprimer les dépendances partielles",
+                    "Retirer les dépendances transitives",
+                    "Créer des clés composites"
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Qu'est-ce qu'une association réflexive dans le MCD ?",
+                options: [
+                    "Une association entre une entité et elle-même",
+                    "Une association qui reflète une autre association",
+                    "Une association qui n'a pas de cardinalités",
+                    "Une association entre deux entités identiques"
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Dans quel cas utilise-t-on une relation ternaire dans le MCD ?",
+                options: [
+                    "Quand trois entités sont liées par une seule association",
+                    "Quand une entité a trois attributs",
+                    "Quand il y a trois tables dans la base de données",
+                    "Quand une entité est liée à trois autres entités"
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Qu'est-ce que le concept de 'vue' dans une base de données ?",
+                options: [
+                    "Une représentation graphique de la base de données",
+                    "Une table temporaire créée pour stocker des résultats intermédiaires",
+                    "Une table virtuelle basée sur le résultat d'une requête SQL",
+                    "Un outil pour visualiser les relations entre les tables"
+                ],
+                correctAnswer: 2
+            },
+            {
+                question: "Quel est le principal avantage de l'utilisation d'index dans une base de données ?",
+                options: [
+                    "Réduire la taille de la base de données",
+                    "Améliorer la sécurité des données",
+                    "Accélérer les opérations de recherche et de tri",
+                    "Faciliter la sauvegarde des données"
+                ],
+                correctAnswer: 2
+            },
+            {
+                question: "Qu'est-ce qu'une procédure stockée dans le contexte des bases de données ?",
+                options: [
+                    "Une méthode de stockage des données sur disque",
+                    "Un ensemble d'instructions SQL précompilées stockées dans la base de données",
+                    "Une technique pour organiser les tables dans la base de données",
+                    "Un outil pour générer automatiquement des requêtes SQL"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Quel est le rôle principal d'un trigger dans une base de données ?",
+                options: [
+                    "Accélérer l'exécution des requêtes",
+                    "Automatiser les sauvegardes de la base de données",
+                    "Exécuter automatiquement des actions en réponse à certains événements dans la base de données",
+                    "Gérer les connexions des utilisateurs à la base de données"
+                ],
+                correctAnswer: 2
+            },
+            {
+                question: "Qu'est-ce que le concept de 'transaction' dans une base de données ?",
+                options: [
+                    "Un échange de données entre deux tables",
+                    "Une série d'opérations traitées comme une seule unité de travail",
+                    "Un type spécial de requête SQL",
+                    "Une méthode pour optimiser les performances de la base de données"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Quelle est la différence principale entre le modèle de données hiérarchique et le modèle relationnel ?",
+                options: [
+                    "Le modèle hiérarchique utilise des tables, le modèle relationnel utilise des arbres",
+                    "Le modèle hiérarchique organise les données en structure arborescente, le modèle relationnel utilise des tables liées",
+                    "Le modèle hiérarchique est plus récent que le modèle relationnel",
+                    "Il n'y a pas de différence significative entre ces deux modèles"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Qu'est-ce que le langage SQL ?",
+                options: [
+                    "Un langage de programmation orienté objet",
+                    "Un langage de requête structuré pour gérer les bases de données relationnelles",
+                    "Un protocole de communication entre serveurs de bases de données",
+                    "Un système de gestion de bases de données"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Quel est le rôle d'une clé candidate dans une base de données ?",
+                options: [
+                    "Identifier de manière unique chaque enregistrement dans une table",
+                    "Lier deux tables entre elles",
+                    "Accélérer les requêtes sur une table",
+                    "Crypter les données sensibles"
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Qu'est-ce que la dénormalisation dans le contexte des bases de données ?",
+                options: [
+                    "Le processus de suppression de toutes les relations entre les tables",
+                    "L'ajout intentionnel de redondance pour améliorer les performances des requêtes",
+                    "La conversion d'une base de données relationnelle en base de données orientée objet",
+                    "La simplification excessive du schéma de la base de données"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Quel est le principal avantage des bases de données NoSQL par rapport aux bases de données relationnelles ?",
+                options: [
+                    "Elles sont toujours plus rapides",
+                    "Elles offrent une meilleure sécurité des données",
+                    "Elles permettent une plus grande flexibilité dans la structure des données",
+                    "Elles utilisent moins d'espace de stockage"
+                ],
+                correctAnswer: 2
+            },
+            {
+                question: "Qu'est-ce que le concept de 'ACID' dans le contexte des bases de données ?",
+                options: [
+                    "Un type de base de données NoSQL",
+                    "Un ensemble de propriétés garantissant la fiabilité des transactions dans une base de données",
+                    "Une méthode de cryptage des données",
+                    "Un algorithme d'optimisation des requêtes"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Quel est le rôle principal d'un SGBD (Système de Gestion de Base de Données) ?",
+                options: [
+                    "Créer des interfaces utilisateur pour les applications",
+                    "Gérer le stockage, la récupération et la manipulation des données dans une base de données",
+                    "Analyser les performances du réseau",
+                    "Développer des applications web"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "Qu'est-ce que le 'data mining' ou fouille de données ?",
+                options: [
+                    "L'extraction physique de disques durs contenant des données",
+                    "Le processus d'analyse de grandes quantités de données pour découvrir des modèles et des tendances",
+                    "La suppression sécurisée de données obsolètes",
+                    "La copie de données d'une base de données à une autre"
+                ],
+                correctAnswer: 1
+            }
+        ];
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        shuffleArray(questions);
+
+        const quizForm = document.getElementById('quiz-form');
+        questions.forEach((q, index) => {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question';
+            questionDiv.innerHTML = `
+                <p><strong>Question ${index + 1}:</strong> ${q.question}</p>
+                <div class="options">
+                    ${q.options.map((option, i) => `
+                        <label>
+                            <input type="radio" name="q${index}" value="${i}">
+                            ${option}
+                        </label>
+                    `).join('')}
+                </div>
+            `;
+            quizForm.appendChild(questionDiv);
+        });
+
+        function checkAnswers() {
+            let score = 0;
+            questions.forEach((q, index) => {
+                const selectedAnswer = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selectedAnswer && parseInt(selectedAnswer.value) === q.correctAnswer) {
+                    score++;
+                }
+            });
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `Vous avez obtenu ${score} sur ${questions.length} points.`;
+            resultDiv.className = score > questions.length / 2 ? 'result correct' : 'result incorrect';
+        }
+    </script>
+</body>
+</html>
